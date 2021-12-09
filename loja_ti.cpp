@@ -6,6 +6,7 @@
 #include <string.h>
 #include <cstdlib>
 #include <iostream>
+#include <sys/stat.h>
 
 using namespace std;
         
@@ -32,6 +33,11 @@ string makeFileName (string fileName) {
     return readyFileName;
 }
 
+bool checkIfDirExists(const std::string &s)
+{
+  struct stat buffer;
+  return (stat (s.c_str(), &buffer) == 0);
+}
 
 void printDB () {
     options: 
@@ -265,6 +271,11 @@ int deleteProduct () {
 
 int main () {
     setlocale(LC_ALL,"");
+    
+    if (checkIfDirExists ("resource_files") == false) {
+        mkdir ("resource_files", 0777);
+    }
+
     fstream baseProductFile;
     baseProductFile.open (makeFileName ("baseProductFile"), ios::app);
     baseProductFile.close ();
